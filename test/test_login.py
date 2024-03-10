@@ -1,3 +1,3 @@
 def test_login(app):
     app.session.login("administrator", "root")
-    assert app.session.login("administrator")
+    assert app.session.is_logged_in_as("administrator")

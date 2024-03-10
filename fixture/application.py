@@ -39,8 +39,7 @@ class Application:
     def open_home_page(self):
         driver = self.driver
         if not (driver.current_url.endswith("/index.php") and len(driver.find_elements(By.XPATH, "//input[@value='Send e-Mail']")) > 0):
-            with allure.step("Open start page"):
-                self.driver.get(self.base_url)
+            self.driver.get(self.base_url)
 
     @staticmethod
     def apply_value_str_by_name(driver, field_name, value, clear=False):
