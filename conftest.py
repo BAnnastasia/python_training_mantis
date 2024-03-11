@@ -23,9 +23,10 @@ def app(request):
     global fixture
     browser = request.config.getoption("--browser")
     web_config = load_config(request.config.getoption("--target"))['web']
+    web_config2 = load_config(request.config.getoption("--target"))['webadmin']
     if fixture is None or not fixture.is_valid():
         fixture = Application(browser=browser, base_url=web_config['baseUrl'])
-    #fixture.session.ensure_login(username=web_config['username'], password=web_config['password'])
+    fixture.session.ensure_login(username=web_config2['username'], password=web_config2['password'])
     return fixture
 
 

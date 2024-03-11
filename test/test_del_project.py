@@ -2,7 +2,6 @@ from model.project import Project
 import random
 import datetime
 def test_delete_project(app,orm):
-    app.session.login("administrator", "root")
     if len(orm.get_project_list()) == 0:
         app.project.create(Project(name="test_name_delete"+str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))))
     old_projects = orm.get_project_list()
