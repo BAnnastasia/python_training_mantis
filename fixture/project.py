@@ -12,9 +12,6 @@ class ProjectHelper:
     def create(self, project):
         driver = self.app.driver
         self.open_manage_proj_page()
-       # driver.get("http://localhost/mantisbt-1.2.20/my_view_page.php")
-
-
         driver.find_element(By.XPATH, "//input[@value=\'Create New Project\']").click()
         self.fild_group_form(project)
         driver.find_element(By.XPATH, "//input[@value=\'Add Project\']").click()
@@ -28,3 +25,18 @@ class ProjectHelper:
         if not (driver.current_url.endswith("/manage_proj_page.php")):
             driver.find_element(By.LINK_TEXT, "Manage").click()
             driver.find_element(By.LINK_TEXT, "Manage Projects").click()
+
+    def delete_project_by_id(self, id):
+        driver = self.app.driver
+        self.open_manage_proj_page()
+        self.select_project_by_id(id)
+        driver.find_element(By.CSS_SELECTOR, "input[value='Delete Project']").click()
+        driver.find_element(By.CSS_SELECTOR, "input[value='Delete Project']").click()
+
+    def select_project_by_id(self, id):
+        driver = self.app.driver
+        driver.find_element(By.XPATH, "//a[contains(@href, 'manage_proj_edit_page.php?project_id=%s')]" % id).click()
+        #driver.find_element(By.CSS_SELECTOR, "input[value='%s']" % id).click()
+
+
+
