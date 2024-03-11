@@ -1,8 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from fixture.session import SessionHelper
-#from fixture.group import GroupHelper
-#from fixture.contact import ContactHelper
+from fixture.project import ProjectHelper
+
 import random
 import string
 
@@ -21,8 +21,7 @@ class Application:
             raise ValueError("Unrecogmizer browser %s"%browser )
         self.vars = {}
         self.session = SessionHelper(self)
-    #    self.group = GroupHelper(self)
-     #   self.contact = ContactHelper(self)
+        self.project = ProjectHelper(self)
         self.base_url = base_url
 
     def is_valid(self):
