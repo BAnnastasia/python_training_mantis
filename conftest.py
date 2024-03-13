@@ -5,6 +5,7 @@ import os.path
 import json
 import importlib
 import jsonpickle
+import ftputil
 
 fixture = None
 target = None
@@ -18,17 +19,39 @@ def load_config(file):
             target = json.load(f)
     return target
 
+@pytest.fixture(scope="session", autouse=True)
+def config(request):
+    return load_config(request.config.getoption("--target"))
 @pytest.fixture
-def app(request):
+def app(request,config):
     global fixture
     browser = request.config.getoption("--browser")
-    web_config = load_config(request.config.getoption("--target"))['web']
-    web_config2 = load_config(request.config.getoption("--target"))['webadmin']
+    web_config = config['web']
+    web_config2 = config['webadmin']
     if fixture is None or not fixture.is_valid():
         fixture = Application(browser=browser, base_url=web_config['baseUrl'])
     fixture.session.ensure_login(username=web_config2['username'], password=web_config2['password'])
     return fixture
+@pytest.fixture(scope="session", autouse=True)
+def configer_server(request, config):
+    install_server_configuration(config['ftp']['host'], config['ftp']['username'], config['ftp']['password'])
+    def fin():
+        restore_server_configuration(config['ftp']['host'], config['ftp']['username'], config['ftp']['password'])
+    request.addfinalizer(fin)
 
+def install_server_configuration(host, username, password):
+    with ftputil.FTPHost(host,username,password) as remote:
+        if remote.path.isfile("config_inc.php.bak"):
+            remote.remove("config_inc.php.bak")
+        if remote.path.isfile("config_inc.php"):
+            remote.rename("config_inc.php","config_inc.php.bak")
+        remote.upload(os.path.join(os.path.dirname(__file__),"resources/config_inc.php"),"config_inc.php")
+def restore_server_configuration(host ,username, password):
+    with ftputil.FTPHost(host, username, password) as remote:
+        if remote.path.isfile("config_inc.php.bak"):
+            if remote.path.isfile("config_inc.php"):
+                remote.remove("config_inc.php")
+            remote.rename("config_inc.php.bak", "config_inc.php")
 
 @pytest.fixture(scope="session")
 def orm(request):
