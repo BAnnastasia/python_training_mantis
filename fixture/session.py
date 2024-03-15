@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 class SessionHelper:
     def __init__(self, app):
         self.app = app
+
+
     def login(self, username, password):
         driver = self.app.driver
         self.app.open_home_page()
@@ -12,12 +14,17 @@ class SessionHelper:
         driver.find_element(By.NAME, "password").click()
         driver.find_element(By.NAME, "password").send_keys(password)
         driver.find_element(By.XPATH, '//input[@value="Login"]').click()
+        self.username = username
+        self.password = password
+
 
 
     def logout(self):
         driver = self.app.driver
         #Logout
         driver.find_element(By.LINK_TEXT, "Logout").click()
+        self.username = None
+        self.password = None
 
     def ensure_logout(self):
         driver = self.app.driver
