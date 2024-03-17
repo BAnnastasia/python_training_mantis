@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 class SessionHelper:
     def __init__(self, app):
         self.app = app
+        self.username = None
+        self.password = None
 
 
     def login(self, username, password):
